@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Terms and Conditions</title>
+  <link rel="stylesheet" href="/styles/style.css">
+</head>
+<body>
+  <div class="container">
+    <div class="terms-container">
+      <h1>Our Relationship Terms</h1>
+      <div id="term-display">
+        <p id="term-text">
+          <% terms.forEach(term => { %>
+            <%= term.content %><br><br>
+          <% }) %>
+        </p>
+      </div>
+
+      <div class="buttons">
+        <form id="agree-form" action="/agree/<%= currentTermId %>" method="POST">
+          <input type="hidden" name="agreed" value="yes">
+          <button type="button" id="agree-btn">Haan</button>
+        </form>
+        <form action="/agree/<%= currentTermId %>" method="POST">
+          <button type="submit" id="disagree-btn" name="agreed" value="no">Nahi</button>
+        </form>
+      </div>
+
+      <% if (typeof errorMessage !== 'undefined' && errorMessage) { %>
+        <div id="message" class="visible"><%= errorMessage %></div>
+      <% } %>
+
+      <div id="heart-animation" class="hidden">❤️</div>
+    </div>
+  </div>
+  <script>
+    document.getElementById('agree-btn').addEventListener('click', () => {
+      const heartAnimation = document.getElementById('heart-animation');
+      heartAnimation.classList.remove('hidden');
+      heartAnimation.classList.add('visible');
+      setTimeout(() => {
+        heartAnimation.classList.remove('visible');
+        heartAnimation.classList.add('hidden');
+        document.getElementById('agree-form').submit();
+      }, 1000); // Ensure the heart animation stays for 1 second
+    });
+
+    document.getElementById('agree-form').addEventListener('submit', (event) => {
+      event.preventDefault();
+      const currentTermId = <%= currentTermId %>;
+      if (currentTermId === 15) {
+        window.location.href = '/signature';
+      } else {
+        event.target.submit();
+      }
+    });
+  </script>
+</body>
+</html>
